@@ -1,0 +1,183 @@
+---
+title: "Título do Relatório"
+author: "Tiago Matos"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Introdução
+
+Aqui você pode introduzir o contexto do seu relatório.
+
+# Análise de Dados
+
+Nesta seção, você pode carregar e analisar seus dados.
+
+```{r setup, include=FALSE}
+# Configurações iniciais
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+library(knitr)
+library(kableExtra)
+library(dplyr) 
+
+Sys.getlocale("LC_CTYPE")
+Sys.setlocale("LC_CTYPE", "pt_BR.UTF-8")
+
+attack1 <- read_excel("Dados/Dados_Adeanio_Attack_I_27052024.xlsx", sheet = "data")
+attack2 <- read_excel("Dados/Dados_Adeanio_Attack_II_27052024.xlsx", sheet = "data")
+```
+
+```{r}
+
+head(attack1)
+```
+
+```{r, include=FALSE}
+# Contando o número de ataques como desfecho
+attack1$attack621_v2 <- as.numeric(attack1$attack621_v2)
+attack1$attack621_v2 <- ifelse(is.na(attack1$attack621_v2), 0, attack1$attack621_v2)
+attack1$attack621_v2[attack1$attack621_v2 == 99] = 0
+
+
+attack1$attack211_v2 <- as.numeric(attack1$attack211_v2)
+attack1$attack211_v2 <- ifelse(is.na(attack1$attack211_v2), 0, attack1$attack211_v2)
+attack1$attack211_v2[attack1$attack211_v2 == 99] = 0
+
+# Criando dataframe vazio
+attack.final.1 <- data.frame()
+
+attack.final.1 <- data.frame(
+  soma.ataques =  attack1$attack621_v2 + attack1$attack211_v2
+)
+
+attack.final.1$maximo.ataques <- pmax(attack1$attack621_v2 , attack1$attack211_v2, na.rm = T)
+
+```
+
+## Soma de Ataques
+```{r, echo=FALSE}
+attack.final.1$soma.ataques
+```
+
+
+## Teste t entre as barreiras de exames e a soma de ataques
+```{r, echo=F}
+# attack1$attack533
+
+attack1$attack533 <- lapply(attack1$attack533, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
+attack1$attack533 <- unlist(attack1$attack533)
+# unlist(attack1$attack533)
+# attack1$attack533
+
+attack1$attack599 <- lapply(attack1$attack599, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
+attack1$attack599 <- unlist(attack1$attack599)
+# unlist(attack1$attack599)
+# attack1$attack599
+
+
+attack.final.1$barreira.exame <- ifelse(is.na(attack1$attack533) & is.na(attack1$attack599),
+                       0,
+                       ifelse(is.na(attack1$attack533) & attack1$attack599, attack1$attack599,
+                              ifelse(is.na(attack1$attack599) & attack1$attack533, attack1$attack533,
+                                     attack1$attack533 | attack1$attack599)))
+
+#Teste t entre ataques x barreira de exames
+resultado_t_n_ataques_acesso_exame = t.test(soma.ataques ~ barreira.exame, data=attack.final.1, na.action = na.omit)
+
+# Extraindo os resultados do teste t
+t_statistic <- resultado_t_n_ataques_acesso_exame$statistic
+p_value <- resultado_t_n_ataques_acesso_exame$p.value
+conf_int <- resultado_t_n_ataques_acesso_exame$conf.int
+mean_diff <- resultado_t_n_ataques_acesso_exame$estimate
+df <- resultado_t_n_ataques_acesso_exame$parameter
+
+# Criando uma tabela de resultados
+resultados_ataques_exames <- data.frame(
+  "Estatística t" = round(t_statistic, 4),
+  "Valor p" = round(p_value, 4),
+  "Intervalo de Confiança Inferior" = round(conf_int[1], 4),
+  "Intervalo de Confiança Superior" = round(conf_int[2], 4),
+  "Diferença de Médias" = round(mean_diff[1] - mean_diff[2], 4),
+  "Graus de Liberdade" = df
+)
+
+estatisticas_exame <- attack.final.1 %>% select("soma.ataques", "barreira.exame") %>%
+  group_by(barreira.exame) %>%
+  summarise(
+    N = n(),
+    Média = mean(soma.ataques, na.rm = TRUE),
+    DP = sd(soma.ataques, na.rm = TRUE),
+    t = resultado_t_n_ataques_acesso_exame$statistic,
+    GL = resultado_t_n_ataques_acesso_exame$parameter,
+    p = resultado_t_n_ataques_acesso_exame$p.value,
+    Inferior = resultado_t_n_ataques_acesso_exame$conf.int[1],
+    Superior = resultado_t_n_ataques_acesso_exame$conf.int[2]
+  )
+
+estatisticas_exame <- estatisticas_exame %>%
+  mutate(barreira.exame = ifelse(barreira.exame == TRUE, "Sim", "Não"))
+
+estatisticas_exame <- estatisticas_exame %>% rename("Barreira" = "barreira.exame")
+
+
+
+estatisticas_exame %>%
+  kable(format = "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
+  add_header_above(c(" " = 1, "Teve barreira de acesso a exames?" = 8)) %>%
+  collapse_rows(columns = 5:9 , valign = "middle")
+
+```
+
+## Teste t entre as barreiras de transporte e a soma de ataques
+```{r, echo=F}
+
+attack.final.1$barreira.transporte = attack1$attack546
+attack.final.1$barreira.transporte[is.na(attack.final.1$barreira.transporte) | attack.final.1$barreira.transporte == "Sim"] = 1
+attack.final.1$barreira.transporte[attack.final.1$barreira.transporte == "Não"] = 0
+attack.final.1$barreira.transporte = as.numeric(attack.final.1$barreira.transporte)
+
+
+teste_t_ataques_transporte = t.test(attack.final.1$soma.ataques ~ attack.final.1$barreira.transporte, data=attack.final.1, na.action = na.omit)
+
+# Extraindo os resultados do teste t
+t_statistic <- teste_t_ataques_transporte$statistic
+p_value <- teste_t_ataques_transporte$p.value
+conf_int <- teste_t_ataques_transporte$conf.int
+mean_diff <- teste_t_ataques_transporte$estimate
+df <- teste_t_ataques_transporte$parameter
+
+estatisticas_transporte <- attack.final.1 %>% select("soma.ataques", "barreira.transporte") %>%
+  group_by(barreira.transporte) %>%
+  summarise(
+    N = n(),
+    Média = mean(soma.ataques, na.rm = TRUE),
+    DP = sd(soma.ataques, na.rm = TRUE),
+    t = teste_t_ataques_transporte$statistic,
+    GL = teste_t_ataques_transporte$parameter,
+    p = teste_t_ataques_transporte$p.value,
+    Inferior = teste_t_ataques_transporte$conf.int[1],
+    Superior = teste_t_ataques_transporte$conf.int[2]
+  )
+
+
+estatisticas_transporte <- estatisticas_transporte %>%
+  mutate(barreira.transporte = ifelse(barreira.transporte == TRUE, "Sim", "Não"))
+
+estatisticas_transporte <- estatisticas_transporte %>% rename("Barreira" = "barreira.transporte")
+# 
+# 
+# 
+estatisticas_transporte %>%
+  kable(format = "html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
+  add_header_above(c(" " = 1, "Teve barreira de acesso relacionada a transportes?" = 8)) %>%
+  collapse_rows(columns = 5:9 , valign = "middle")
+
+```
+
+
