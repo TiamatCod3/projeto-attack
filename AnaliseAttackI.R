@@ -220,7 +220,7 @@ attack1$barreira.atencao[attack1$barreira.atencao == "NA"] = 0
 attack1$barreira.atencao = as.numeric(attack1$barreira.atencao)
 attack1$barreira.atencao
 
-teste_t_ataques_atencao = t.test(attack1$soma.ataques ~ attack1$barreira.atencao, data=attack1, na.action = na.omit)
+teste_t_ataques_atencao = t.test(soma.ataques ~ barreira.atencao, data=attack1, na.action = na.omit)
 teste_t_ataques_atencao
 
 #VERIFICANDO BARREIRAS RELACIONADAS A MEDICAMENTOS
@@ -249,7 +249,7 @@ resultado_fisher
 
 #VERIFICANDO BARREIRAS RELACIONADAS A INTERNAÇÃO
 attack1$attack929
-attack1$barreira.internacao = attack1$attack601
+attack1$barreira.internacao = attack1$attack929
 attack1$barreira.internacao
 attack1$barreira.internacao[attack1$barreira.internacao == "Sim"] = 1
 attack1$barreira.internacao
@@ -348,10 +348,6 @@ tabela_contingencia
 
 resultado_fisher <- fisher.test(tabela_contingencia, simulate.p.value = T)
 resultado_fisher
-
-
-
-
 
 
 
