@@ -320,299 +320,120 @@ estatisticas_internacao %>%
   collapse_rows(columns = 5:9 , valign = "middle")
 
 ```
-```
-
-
 
 ## Attack2
-```{r}
 
-head(attack1)
-```
+```{r, echo=F, include=T}
 
-```{r, include=F}
-# Contando o número de ataques como desfecho
-attack1$attack621_v2 <- as.numeric(attack1$attack621_v2)
-attack1$attack621_v2 <- ifelse(is.na(attack1$attack621_v2), 0, attack1$attack621_v2)
-attack1$attack621_v2[attack1$attack621_v2 == 99] = 0
-
-
-attack1$attack211_v2 <- as.numeric(attack1$attack211_v2)
-attack1$attack211_v2 <- ifelse(is.na(attack1$attack211_v2), 0, attack1$attack211_v2)
-attack1$attack211_v2[attack1$attack211_v2 == 99] = 0
-
-# Criando dataframe vazio
-attack.final.1 <- data.frame()
-
-attack.final.1 <- data.frame(
-  soma.ataques =  attack1$attack621_v2 + attack1$attack211_v2
-)
-
-attack.final.1$maximo.ataques <- pmax(attack1$attack621_v2 , attack1$attack211_v2, na.rm = T)
+head(attack2)
 
 ```
 
 ```{r}
-attack.final.1
-```
+
+#Contando o número de ataques
+# attack2$attack0173 <- as.numeric
+attack2$attack0173 <- as.numeric(attack2$attack0173)
+attack2$attack0173 <- ifelse(is.na(attack2$attack0173), 0, attack2$attack0173)
+attack2$attack0173[attack2$attack0173 == 999] = 0
+attack2$attack0173
+
+attack2$attack0174
+attack2$attack0174 <- as.numeric(attack2$attack0174)
+attack2$attack0174 <- ifelse(is.na(attack2$attack0174), 0, attack2$attack0174)
+attack2$attack0174[attack2$attack0174 == 999] = 0
+attack2$attack0174
+
+attack2$attack0573
+attack2$attack0573 <- as.numeric(attack2$attack0573)
+attack2$attack0573 <- ifelse(is.na(attack2$attack0573), 0, attack2$attack0573)
+attack2$attack0573[attack2$attack0573 == 999] = 0
+attack2$attack0573
 
 
-## Soma de Ataques
-
-Para calcular a relação entre a soma de ataques e as barreiras de acesso foi feito uma tratativa com os dados de soma de ataque considerando os campos attack621_v2 e attack211_v2 para realizar a soma do total de ataques.Os dados faltantes foram considerados como 0 para fins de soma.
-```{r, echo=FALSE}
-attack.final.1$soma.ataques
-```
-
+attack2$attack0176
+attack2$attack0176 <- as.numeric(attack2$attack0176)
+attack2$attack0176 <- ifelse(is.na(attack2$attack0176), 0, attack2$attack0176)
+attack2$attack0176[attack2$attack0176 == 999 | attack2$attack0176 == 99] = 0
+attack2$attack0176
 
 
-## Teste t entre as barreiras de exames e a soma de ataques
+attack2$attack0177
+attack2$attack0177 <- as.numeric(attack2$attack0177)
+attack2$attack0177 <- ifelse(is.na(attack2$attack0177), 0, attack2$attack0177)
+attack2$attack0177[attack2$attack0177 == 999] = 0
+attack2$attack0177
 
-Para avaliar a relação entre as barreiras de exame e a soma de ataques foram considerados os campos attack533 e attack599 considerando a seguinte estrutura lógica:
+attack2$soma.ataques <- attack2$attack0173 + attack2$attack0174 + attack2$attack0176 + attack2$attack0177 + attack2$attack0573
+attack2$soma.ataques
 
-* Caso algum destes campos fosse respondido como sim foi considerado com tendo barreira para exames.
-Os resultados seguem abaixo:
-```{r, echo=F}
-# attack1$attack533
+attack2$maximo.ataques <- pmax(attack2$attack0173 , attack2$attack0174 , attack2$attack0176 , attack2$attack0177 , attack2$attack0573)
+attack2$maximo.ataques
 
-attack.final.1$attack533 <- lapply(attack1$attack533, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
-attack.final.1$attack533 <- unlist(attack.final.1$attack533)
-# attack.final.1$attack533
+#Barreira Atenção Básica
+attack2$attack0643_v3 <- lapply(attack2$attack0643_v3, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
+attack2$attack0643_v3 <- unlist(attack2$attack0643_v3)
+# unlist(attack2$attack0643_v3)
+attack2$attack0643_v3
 
-attack.final.1$attack599 <- lapply(attack1$attack599, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
-attack.final.1$attack599 <- unlist(attack.final.1$attack599)
-# attack.final.1$attack599
+attack2$barreira.atencao = attack2$attack0643_v3
 
-
-attack.final.1$barreira.exame <- ifelse(is.na(attack.final.1$attack533) & is.na(attack.final.1$attack599),
-                       0,
-                       ifelse(is.na(attack.final.1$attack533) & attack.final.1$attack599, attack.final.1$attack599,
-                              ifelse(is.na(attack.final.1$attack599) & attack.final.1$attack533, attack.final.1$attack533,
-                                     attack.final.1$attack533 | attack.final.1$attack599)))
-
-# table(attack.final.1$barreira.exame)
-# unique(attack.final.1$barreira.exame)
-
-#Teste t entre ataques x barreira de exames
-resultado_t_n_ataques_acesso_exame = t.test(soma.ataques ~ barreira.exame, data=attack.final.1, na.action = na.omit)
-
-# resultado_t_n_ataques_acesso_exame
-
-# Extraindo os resultados do teste t
-# t_statistic <- resultado_t_n_ataques_acesso_exame$statistic
-# p_value <- resultado_t_n_ataques_acesso_exame$p.value
-# conf_int <- resultado_t_n_ataques_acesso_exame$conf.int
-# mean_diff <- resultado_t_n_ataques_acesso_exame$estimate
-# df <- resultado_t_n_ataques_acesso_exame$parameter
-
-# # Criando uma tabela de resultados
-# resultados_ataques_exames <- data.frame(
-#   "Estatística t" = round(t_statistic, 4),
-#   "Valor p" = round(p_value, 4),
-#   "Intervalo de Confiança Inferior" = round(conf_int[1], 4),
-#   "Intervalo de Confiança Superior" = round(conf_int[2], 4),
-#   "Diferença de Médias" = round(mean_diff[1] - mean_diff[2], 4),
-#   "Graus de Liberdade" = df
-# )
-
-estatisticas_exame <- attack.final.1 %>% select("soma.ataques", "barreira.exame") %>%
-  group_by(barreira.exame) %>%
-  summarise(
-    N = n(),
-    Média = mean(soma.ataques, na.rm = TRUE),
-    DP = sd(soma.ataques, na.rm = TRUE),
-    t = resultado_t_n_ataques_acesso_exame$statistic,
-    GL = resultado_t_n_ataques_acesso_exame$parameter,
-    p = resultado_t_n_ataques_acesso_exame$p.value,
-    Inferior = resultado_t_n_ataques_acesso_exame$conf.int[1],
-    Superior = resultado_t_n_ataques_acesso_exame$conf.int[2]
-  )
-
-estatisticas_exame <- estatisticas_exame %>%
-  mutate(barreira.exame = ifelse(barreira.exame == TRUE, "Sim", "Não"))
-
-estatisticas_exame <- estatisticas_exame %>% rename("Barreira" = "barreira.exame")
+teste_t_atencao = t.test(attack2$soma.ataques ~ attack2$barreira.atencao, data=attack2, na.action = na.omit)
+teste_t_atencao
 
 
-estatisticas_exame %>%
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c(" " = 1, "Teve barreira de acesso a exames?" = 8)) %>%
-  collapse_rows(columns = 5:9 , valign = "middle")
+#Barreira Medicamento
+attack2$attack0681 <- lapply(attack2$attack0681, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
+attack2$attack0681 <- unlist(attack2$attack0681)
+# unlist(attack2$attack0681)
+attack2$attack0681
 
-```
+attack2$attack0681_v2 <- lapply(attack2$attack0681_v2, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
+attack2$attack0681_v2 <- unlist(attack2$attack0681_v2)
+# unlist(attack2$attack0681_v2)
+attack2$attack0681_v2
 
-Destaca-se que não houve significância estatística entre o número de ataques e as barreiras a exames
+attack2$barreira.medicamento <- pmax(attack2$attack0681 , attack2$attack0681_v2)
+attack2$barreira.medicamento
 
-## Teste t entre as barreiras de transporte e a soma de ataques
-Para avaliar a relação entre as barreiras de transporte e a soma de ataques foi considerado o campo attack546. Os dados omissos foram considerados com não.
+teste_t_medicamento = t.test(attack2$soma.ataques ~ attack2$barreira.medicamento, data=attack2, na.action = na.omit)
+teste_t_medicamento
 
-Os resultados seguem abaixo:
-```{r, echo=F}
+#Barreira Transporte
+attack2$attack0662
+attack2$attack0662 <- lapply(attack2$attack0662, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
+attack2$attack0662 <- unlist(attack2$attack0662)
+# unlist(attack2$attack0662)
+attack2$attack0662
 
-attack.final.1$barreira.transporte = attack1$attack546
-attack.final.1$barreira.transporte[is.na(attack.final.1$barreira.transporte) | attack.final.1$barreira.transporte == "Sim"] = 1
-attack.final.1$barreira.transporte[attack.final.1$barreira.transporte == "Não"] = 0
-attack.final.1$barreira.transporte = as.numeric(attack.final.1$barreira.transporte)
+attack2$barreira.transporte <- attack2$attack0662
+attack2$barreira.transporte
 
-
-teste_t_ataques_transporte = t.test(attack.final.1$soma.ataques ~ attack.final.1$barreira.transporte, data=attack.final.1, na.action = na.omit)
-
-# Extraindo os resultados do teste t
-t_statistic <- teste_t_ataques_transporte$statistic
-p_value <- teste_t_ataques_transporte$p.value
-conf_int <- teste_t_ataques_transporte$conf.int
-mean_diff <- teste_t_ataques_transporte$estimate
-df <- teste_t_ataques_transporte$parameter
-
-estatisticas_transporte <- attack.final.1 %>% select("soma.ataques", "barreira.transporte") %>%
-  group_by(barreira.transporte) %>%
-  summarise(
-    N = n(),
-    Média = mean(soma.ataques, na.rm = TRUE),
-    DP = sd(soma.ataques, na.rm = TRUE),
-    t = teste_t_ataques_transporte$statistic,
-    GL = teste_t_ataques_transporte$parameter,
-    p = teste_t_ataques_transporte$p.value,
-    Inferior = teste_t_ataques_transporte$conf.int[1],
-    Superior = teste_t_ataques_transporte$conf.int[2]
-  )
+teste_t_transporte = t.test(soma.ataques ~ barreira.transporte, data=attack2, na.action = na.omit)
+teste_t_transporte
 
 
-estatisticas_transporte <- estatisticas_transporte %>%
-  mutate(barreira.transporte = ifelse(barreira.transporte == TRUE, "Sim", "Não"))
+#Barreira Exame
+attack2$attack0649
+attack2$attack0649 <- lapply(attack2$attack0649, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
+attack2$attack0649 <- unlist(attack2$attack0649)
+# unlist(attack2$attack0649)
+attack2$attack0649
 
-estatisticas_transporte <- estatisticas_transporte %>% rename("Barreira" = "barreira.transporte")
-# 
-# 
-# 
-estatisticas_transporte %>%
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c(" " = 1, "Teve barreira de acesso relacionada a transportes?" = 8)) %>%
-  collapse_rows(columns = 5:9 , valign = "middle")
+attack2$barreira.exame <- attack2$attack0649
+
+teste_t_exame = t.test(attack2$soma.ataques ~ attack2$barreira.exame, data=attack2, na.action = na.omit)
+teste_t_exame
+
+attack2$exames_sim_v2
+
+attack2$barreira.exame
+
+
+attack2$barreira.unica <- pmax(attack2$barreira.atencao, attack2$barreira.exame, attack2$barreira.transporte, attack2$barreira.medicamento)
+attack2$barreira.unica
+
+teste_t_barreiras = t.test(attack2$soma.ataques ~ attack2$barreira.unica, data=attack2, na.action = na.omit)
+teste_t_barreiras
 
 ```
-
-Destaca-se que não houve significância estatística entre o número de ataques e as barreiras a transporte
-
-## Teste t entre as barreiras de atenção básica e a soma de ataques
-
-Não houve quantidade suficiente de observações sobre as barreiras relacionadas à atenção básica que permitissem realizar uma análise estatítica.
-```{r, echo=F}
-#VERIFICANDO BARREIRAS RELACIONADAS A ATENÇÃO BÁSICA
-attack.final.1$barreira.atencao = attack1$attack527
-attack.final.1$barreira.atencao[attack.final.1$barreira.atencao == "Sim"] = 1
-attack.final.1$barreira.atencao[is.na(attack.final.1$barreira.atencao)] = 0
-attack.final.1$barreira.atencao[attack.final.1$barreira.atencao == "Não"] = 0
-attack.final.1$barreira.atencao[attack.final.1$barreira.atencao == "NA"] = 0
-attack.final.1$barreira.atencao = as.numeric(attack.final.1$barreira.atencao)
-
-
-result <- tryCatch({
-  teste_t_ataques_atencao = t.test(soma.ataques ~ barreira.atencao, data=attack.final.1, na.action = na.omit)
-  
-}, error = function(e) {
-  # Mensagem de erro personalizada
-  message("Ocorreu um erro no teste t: ", e$message)
-  # Retorna um valor padrão ou NULL para continuar o código
-  return(NULL)
-})
-
-# Verifica se o resultado do teste t foi gerado ou se houve erro
-if (!is.null(result)) {
-  print(result)
-} else {
-  message("Teste t não pôde ser executado devido a um erro.")
-}
-```
-
-## Teste t entre as barreiras de medicamentos e a soma de ataques
-
-```{r, echo=F}
-#VERIFICANDO BARREIRAS RELACIONADAS A MEDICAMENTOS
-attack.final.1$barreira.medicamento = attack1$attack601
-attack.final.1$barreira.medicamento[attack.final.1$barreira.medicamento == "Sim"] = 1
-attack.final.1$barreira.medicamento[attack.final.1$barreira.medicamento == "Não"] = 0
-attack.final.1$barreira.medicamento[is.na(attack.final.1$barreira.medicamento)] = 0
-attack.final.1$barreira.medicamento = as.numeric(attack.final.1$barreira.medicamento)
-attack.final.1$barreira.medicamento[attack.final.1$barreira.medicamento == "NA"] = 0
-attack.final.1$barreira.medicamento = as.numeric(attack.final.1$barreira.medicamento)
-
-teste_t_ataques_medicamento = t.test(soma.ataques ~ barreira.medicamento, data=attack.final.1, na.action = na.omit)
-
-estatisticas_medicamento <- attack.final.1 %>% select("soma.ataques", "barreira.medicamento") %>%
-  group_by(barreira.medicamento) %>%
-  summarise(
-    N = n(),
-    Média = mean(soma.ataques, na.rm = TRUE),
-    DP = sd(soma.ataques, na.rm = TRUE),
-    t = teste_t_ataques_medicamento$statistic,
-    GL = teste_t_ataques_medicamento$parameter,
-    p = teste_t_ataques_medicamento$p.value,
-    Inferior = teste_t_ataques_medicamento$conf.int[1],
-    Superior = teste_t_ataques_medicamento$conf.int[2]
-  )
-
-estatisticas_medicamento <- estatisticas_medicamento %>%
-  mutate(barreira.medicamento = ifelse(barreira.medicamento == TRUE, "Sim", "Não"))
-
-estatisticas_medicamento <- estatisticas_medicamento %>% rename("Barreira" = "barreira.medicamento")
-
-
-estatisticas_medicamento %>%
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c(" " = 1, "Teve barreira de acesso a medicamentos?" = 8)) %>%
-  collapse_rows(columns = 5:9 , valign = "middle")
-
-```
-
-## Teste t entre as barreiras de internação e a soma de ataques
-
-```{r, echo=F}
-
-attack.final.1$barreira.internacao = attack1$attack929
-
-attack.final.1$barreira.internacao[attack.final.1$barreira.internacao == "Sim"] = 1
-
-attack.final.1$barreira.internacao[attack.final.1$barreira.internacao == "Não"] = 0
-
-attack.final.1$barreira.internacao[attack.final.1$barreira.internacao == "NA"] = 0
-
-attack.final.1$barreira.internacao[is.na(attack.final.1$barreira.internacao)] = 0
-attack.final.1$barreira.internacao = as.numeric(attack.final.1$barreira.internacao)
-
-
-teste_t_ataques_internacao = t.test(soma.ataques ~ barreira.internacao, data=attack.final.1, na.action = na.omit)
-
-
-estatisticas_internacao <- attack.final.1 %>% select("soma.ataques", "barreira.internacao") %>%
-  group_by(barreira.internacao) %>%
-  summarise(
-    N = n(),
-    Média = mean(soma.ataques, na.rm = TRUE),
-    DP = sd(soma.ataques, na.rm = TRUE),
-    t = teste_t_ataques_internacao$statistic,
-    GL = teste_t_ataques_internacao$parameter,
-    p = teste_t_ataques_internacao$p.value,
-    Inferior = teste_t_ataques_internacao$conf.int[1],
-    Superior = teste_t_ataques_internacao$conf.int[2]
-  )
-
-estatisticas_internacao <- estatisticas_internacao %>%
-  mutate(barreira.internacao = ifelse(barreira.internacao == TRUE, "Sim", "Não"))
-
-estatisticas_internacao <- estatisticas_internacao %>% rename("Barreira" = "barreira.internacao")
-
-
-estatisticas_internacao %>%
-  kable(format = "html") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c(" " = 1, "Teve barreira de acesso a internação?" = 8)) %>%
-  collapse_rows(columns = 5:9 , valign = "middle")
-
-```
-```
-
-
