@@ -30,113 +30,113 @@ attack1$attack211_v2
 attack1$soma.ataques <- attack1$attack621 + attack1$attack621_v2 + attack1$attack211 + attack1$attack211_v2
 attack1$soma.ataques
 
-attack1$maximo.ataques <- pmax(attack1$attack621,  attack1$attack621_v2 ,  attack1$attack211 ,  attack1$attack211_v2, na.rm = T)
-attack1$maximo.ataques
+# attack1$maximo.ataques <- pmax(attack1$attack621,  attack1$attack621_v2 ,  attack1$attack211 ,  attack1$attack211_v2, na.rm = T)
+# attack1$maximo.ataques
 
 #Contando os desfechos de controle da asma por score
 # attack184, attack184_v1, attack184_v2, attack184_v3, attack616
 #Atualizando o score
-attack1$attack180[is.na(attack1$attack180) | attack1$attack180 == "Não"] = 0
-attack1$attack180[attack1$attack180 == "Sim"] = 1
-attack1$attack180
-
-attack1$attack181[is.na(attack1$attack181) | attack1$attack181 == "Não"] = 0
-attack1$attack181[attack1$attack181 == "Sim"] = 1
-attack1$attack181
-attack1$attack182[is.na(attack1$attack182) | attack1$attack182 == "Não"] = 0
-attack1$attack182[attack1$attack182 == "Sim"] = 1
-attack1$attack182
-attack1$attack183[is.na(attack1$attack183) | attack1$attack183 == "Não"] = 0
-attack1$attack183[attack1$attack183 == "Sim"] = 1
-attack1$attack183
-
-attack1$attack184 = attack1$attack180 + attack1$attack181 + attack1$attack182 + attack1$attack183
-attack1$attack184
-
-#Atualizando o score
-attack1$attack180_v2[is.na(attack1$attack180_v2) | attack1$attack180_v2 == "Não"] = 0
-attack1$attack180_v2[attack1$attack180_v2 == "Sim"] = 1
-attack1$attack180_v2 = as.numeric(attack1$attack180_v2)
-attack1$attack180_v2
-
-attack1$attack181_v2[is.na(attack1$attack181_v2) | attack1$attack181_v2 == "Não"] = 0
-attack1$attack181_v2[attack1$attack181_v2 == "Sim"] = 1
-attack1$attack181_v2 = as.numeric(attack1$attack181_v2)
-attack1$attack181_v2
-
-attack1$attack182_v2[is.na(attack1$attack182_v2) | attack1$attack182_v2 == "Não"] = 0
-attack1$attack182_v2[attack1$attack182_v2 == "Sim"] = 1
-attack1$attack182_v2 = as.numeric(attack1$attack182_v2)
-attack1$attack182_v2
-
-attack1$attack183_v2[is.na(attack1$attack183_v2) | attack1$attack183_v2 == "Não"] = 0
-attack1$attack183_v2[attack1$attack183_v2 == "Sim"] = 1
-attack1$attack183_v2 = as.numeric(attack1$attack183_v2)
-attack1$attack183_v2
-
-attack1$attack180_v2 + attack1$attack181_v2 + attack1$attack182_v2 + attack1$attack183_v2
-
-attack1$attack184_v2 = attack1$attack180_v2 + attack1$attack181_v2 + attack1$attack182_v2 + attack1$attack183_v2 
-attack1$attack184_v2
+# attack1$attack180[is.na(attack1$attack180) | attack1$attack180 == "Não"] = 0
+# attack1$attack180[attack1$attack180 == "Sim"] = 1
+# attack1$attack180
+# 
+# attack1$attack181[is.na(attack1$attack181) | attack1$attack181 == "Não"] = 0
+# attack1$attack181[attack1$attack181 == "Sim"] = 1
+# attack1$attack181
+# attack1$attack182[is.na(attack1$attack182) | attack1$attack182 == "Não"] = 0
+# attack1$attack182[attack1$attack182 == "Sim"] = 1
+# attack1$attack182
+# attack1$attack183[is.na(attack1$attack183) | attack1$attack183 == "Não"] = 0
+# attack1$attack183[attack1$attack183 == "Sim"] = 1
+# attack1$attack183
+# 
+# attack1$attack184 = attack1$attack180 + attack1$attack181 + attack1$attack182 + attack1$attack183
+# attack1$attack184
 
 #Atualizando o score
-attack1$attack180_v3[is.na(attack1$attack180_v3) | attack1$attack180_v3 == "Não"] = 0
-attack1$attack180_v3[attack1$attack180_v3 == "Sim"] = 1
-attack1$attack180_v3 = as.numeric(attack1$attack180_v3)
-attack1$attack180_v3
-
-attack1$attack181_v3[is.na(attack1$attack181_v3) | attack1$attack181_v3 == "Não"] = 0
-attack1$attack181_v3[attack1$attack181_v3 == "Sim"] = 1
-attack1$attack181_v3 = as.numeric(attack1$attack181_v3)
-attack1$attack181_v3
-
-attack1$attack182_v3[is.na(attack1$attack182_v3) | attack1$attack182_v3 == "Não"] = 0
-attack1$attack182_v3[attack1$attack182_v3 == "Sim"] = 1
-attack1$attack182_v3 = as.numeric(attack1$attack182_v3)
-attack1$attack182_v3
-
-attack1$attack183_v3[is.na(attack1$attack183_v3) | attack1$attack183_v3 == "Não"] = 0
-attack1$attack183_v3[attack1$attack183_v3 == "Sim"] = 1
-attack1$attack183_v3 = as.numeric(attack1$attack183_v3)
-attack1$attack183_v3
-
-attack1$attack184_v3 = attack1$attack180_v3 + attack1$attack181_v3 + attack1$attack182_v3 + attack1$attack183_v3 
-attack1$attack184_v3
+# attack1$attack180_v2[is.na(attack1$attack180_v2) | attack1$attack180_v2 == "Não"] = 0
+# attack1$attack180_v2[attack1$attack180_v2 == "Sim"] = 1
+# attack1$attack180_v2 = as.numeric(attack1$attack180_v2)
+# attack1$attack180_v2
+# 
+# attack1$attack181_v2[is.na(attack1$attack181_v2) | attack1$attack181_v2 == "Não"] = 0
+# attack1$attack181_v2[attack1$attack181_v2 == "Sim"] = 1
+# attack1$attack181_v2 = as.numeric(attack1$attack181_v2)
+# attack1$attack181_v2
+# 
+# attack1$attack182_v2[is.na(attack1$attack182_v2) | attack1$attack182_v2 == "Não"] = 0
+# attack1$attack182_v2[attack1$attack182_v2 == "Sim"] = 1
+# attack1$attack182_v2 = as.numeric(attack1$attack182_v2)
+# attack1$attack182_v2
+# 
+# attack1$attack183_v2[is.na(attack1$attack183_v2) | attack1$attack183_v2 == "Não"] = 0
+# attack1$attack183_v2[attack1$attack183_v2 == "Sim"] = 1
+# attack1$attack183_v2 = as.numeric(attack1$attack183_v2)
+# attack1$attack183_v2
+# 
+# attack1$attack180_v2 + attack1$attack181_v2 + attack1$attack182_v2 + attack1$attack183_v2
+# 
+# attack1$attack184_v2 = attack1$attack180_v2 + attack1$attack181_v2 + attack1$attack182_v2 + attack1$attack183_v2 
+# attack1$attack184_v2
 
 #Atualizando o score
-attack1$attack612[is.na(attack1$attack612) | attack1$attack612 == "Não"] = 0
-attack1$attack612[attack1$attack612 == "Sim"] = 1
-attack1$attack612 = as.numeric(attack1$attack612)
-attack1$attack612
-
-attack1$attack613[is.na(attack1$attack613) | attack1$attack613 == "Não"] = 0
-attack1$attack613[attack1$attack613 == "Sim"] = 1
-attack1$attack613 = as.numeric(attack1$attack613)
-attack1$attack613
-
-attack1$attack614[is.na(attack1$attack614) | attack1$attack614 == "Não"] = 0
-attack1$attack614[attack1$attack614 == "Sim"] = 1
-attack1$attack614 = as.numeric(attack1$attack614)
-attack1$attack614
-
-attack1$attack615[is.na(attack1$attack615) | attack1$attack615 == "Não"] = 0
-attack1$attack615[attack1$attack615 == "Sim"] = 1
-attack1$attack615 = as.numeric(attack1$attack615)
-attack1$attack615
-
-attack1$attack616 = attack1$attack612 + attack1$attack613 + attack1$attack614 + attack1$attack615
-attack1$attack616
+# attack1$attack180_v3[is.na(attack1$attack180_v3) | attack1$attack180_v3 == "Não"] = 0
+# attack1$attack180_v3[attack1$attack180_v3 == "Sim"] = 1
+# attack1$attack180_v3 = as.numeric(attack1$attack180_v3)
+# attack1$attack180_v3
+# 
+# attack1$attack181_v3[is.na(attack1$attack181_v3) | attack1$attack181_v3 == "Não"] = 0
+# attack1$attack181_v3[attack1$attack181_v3 == "Sim"] = 1
+# attack1$attack181_v3 = as.numeric(attack1$attack181_v3)
+# attack1$attack181_v3
+# 
+# attack1$attack182_v3[is.na(attack1$attack182_v3) | attack1$attack182_v3 == "Não"] = 0
+# attack1$attack182_v3[attack1$attack182_v3 == "Sim"] = 1
+# attack1$attack182_v3 = as.numeric(attack1$attack182_v3)
+# attack1$attack182_v3
+# 
+# attack1$attack183_v3[is.na(attack1$attack183_v3) | attack1$attack183_v3 == "Não"] = 0
+# attack1$attack183_v3[attack1$attack183_v3 == "Sim"] = 1
+# attack1$attack183_v3 = as.numeric(attack1$attack183_v3)
+# attack1$attack183_v3
+# 
+# attack1$attack184_v3 = attack1$attack180_v3 + attack1$attack181_v3 + attack1$attack182_v3 + attack1$attack183_v3 
+# attack1$attack184_v3
+# 
+# #Atualizando o score
+# attack1$attack612[is.na(attack1$attack612) | attack1$attack612 == "Não"] = 0
+# attack1$attack612[attack1$attack612 == "Sim"] = 1
+# attack1$attack612 = as.numeric(attack1$attack612)
+# attack1$attack612
+# 
+# attack1$attack613[is.na(attack1$attack613) | attack1$attack613 == "Não"] = 0
+# attack1$attack613[attack1$attack613 == "Sim"] = 1
+# attack1$attack613 = as.numeric(attack1$attack613)
+# attack1$attack613
+# 
+# attack1$attack614[is.na(attack1$attack614) | attack1$attack614 == "Não"] = 0
+# attack1$attack614[attack1$attack614 == "Sim"] = 1
+# attack1$attack614 = as.numeric(attack1$attack614)
+# attack1$attack614
+# 
+# attack1$attack615[is.na(attack1$attack615) | attack1$attack615 == "Não"] = 0
+# attack1$attack615[attack1$attack615 == "Sim"] = 1
+# attack1$attack615 = as.numeric(attack1$attack615)
+# attack1$attack615
+# 
+# attack1$attack616 = attack1$attack612 + attack1$attack613 + attack1$attack614 + attack1$attack615
+# attack1$attack616
 
 
 #Criando o campo de score máximo entre os 4
-attack1$score.maximo = pmax(attack1$attack184, attack1$attack184_v2, attack1$attack184_v3, attack1$attack616, na.rm = T)
-# attack1$score.maximo[attack1$score.maximo > 4] = NA
-attack1$score.maximo
+# attack1$score.maximo = pmax(attack1$attack184, attack1$attack184_v2, attack1$attack184_v3, attack1$attack616, na.rm = T)
+# # attack1$score.maximo[attack1$score.maximo > 4] = NA
+# attack1$score.maximo
 
-attack1$classificao.score.maximo = ifelse(attack1$score.maximo == 0 , "controlado", 
-                                          ifelse(attack1$score.maximo %in% c(1,2), "parcialmente controlado", 
-                                                 ifelse(attack1$score.maximo %in% c(3,4), "não controlado", NA)))
-attack1$classificao.score.maximo
+# attack1$classificao.score.maximo = ifelse(attack1$score.maximo == 0 , "controlado", 
+#                                           ifelse(attack1$score.maximo %in% c(1,2), "parcialmente controlado", 
+#                                                  ifelse(attack1$score.maximo %in% c(3,4), "não controlado", NA)))
+# attack1$classificao.score.maximo
 
 
 #VERIFICANDO BARREIRAS RELACIONADAS A EXAMES
