@@ -1,0 +1,43 @@
+---
+title: "Relatório de Estatísticas"
+output: html_document
+---
+
+```{r, echo=FALSE}
+# Código R para gerar a tabela
+library(knitr)
+library(kableExtra)
+
+
+Caracteristica = c(
+  "Idade que foi diagnosticado (n=56)",
+  "Foi diagnosticado por médico", "Sim", "Não", "Não informado",
+  "Faz uso regular de medicação", "Sim", "Não", "Não informado",
+  "Quando em crise, qual serviço de saúde procura? (alternativa: sim)", 
+  "UPA", "UBS", "USF", "Consulta particular", "Hospital público", "Hospital particular",
+  "Faz uso contínuo de medicamentos", "Sim", "Não", "Não informado",
+  "Por quais meios os medicamentos são adquiridos?", "Farmácia estadual", 
+  "Farmácia popular", "Farmácia municipal", "Farmácia privada",
+  "Qual o meio de transporte utilizado para serviços de saúde?", 
+  "Caminhando", "Carona", "Táxi ou aplicativo", "Transporte público",
+  "Veículo próprio", "Não informado",
+  "Tem dificuldade em adquirir este medicamento?", "Sim", "Não", "Não informado",
+  "Qual a principal forma de utilização de serviços?", "Consulta particular", 
+  "Plano de saúde", "SUS", "Não informado",
+  "Você gastou recursos próprios com exames no último ano?", "Sim", "Não", "Não informado"
+)
+print(dim(Caracteristica))
+Media = c(14.66, NA, 50, 17, 128, NA, 53, 14, 128, NA, 1, 1, 3, 3, 6, 1, 
+          NA, 60, 134, 1, NA, 1, 21, 25, 88, NA, 34, 9, 51, 83, 17, 1, 
+          NA, 100, 94, 1, NA, 4, 5, 186, 1, NA, 13, 181, 1)
+print(dim(Media))
+`Desvio Padrao` = c(14.84, NA, NA, NA, NA, NA, 27.18, 9.17, NA, NA, 
+                    NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
+                    NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
+                    NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+print(dim(`Desvio Padrao`))
+# dados <- data.frame(
+#   )
+
+# kable(dados, format = "html", caption = "Tabela 1 - Estatísticas descritivas das características sócio-clínico-demográficas") %>%
+#   kable_styling(full_width = F, position = "left")

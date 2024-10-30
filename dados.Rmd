@@ -1,0 +1,83 @@
+```{r, echo=F}
+# Criando um data frame com as estatísticas descritivas
+dados <- data.frame(
+  Caracteristica = c(
+    "Idade que foi diagnosticado (n=56)", "Sim", "Não", "Não informado",
+    "Faz uso regular de medicação", "Sim", "Não", "Não informado"
+  ),
+  Media = c(14.66, 50, 17, 128, NA, 53, 14, 128),
+  Desvio_Padrao = c(14.84, NA, NA, NA, NA, 27.18, 9.17, NA)
+)
+
+# Exibindo a tabela
+library(knitr)
+library(kableExtra)
+
+kable(dados, format = "html", caption = "Tabela 1 - Estatísticas Descritivas") %>%
+  kable_styling(full_width = FALSE, position = "left", bootstrap_options = c("striped", "hover"))
+```
+
+```{r}
+dt <- mtcars[1:5, 1:6]
+dt %>%
+  kbl() %>%
+  kable_styling()
+```
+
+```{r}
+dt %>%
+  kbl(caption = "Recreating booktabs style table") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+
+```{r}
+
+dt %>%
+  kbl(booktabs = TRUE, label = NA)
+
+```
+
+
+
+
+
+
+
+
+```{r}
+# Destacar a segunda linha da tabela
+kable(dados, format = "html", caption = "Linha Destacada") %>%
+  kable_styling(bootstrap_options = "striped") %>%
+  row_spec(2, bold = TRUE, color = "white", background = "blue")
+
+```
+
+
+```{r}
+# Destacar a célula com o valor 70
+dados$Valor <- cell_spec(dados$Valor, "html", color = ifelse(dados$Valor == 70, "red", "black"))
+
+# Exibir a tabela com a célula destacada
+kable(dados, format = "html", escape = FALSE, caption = "Célula Destacada")
+
+```
+
+```{r}
+# Criar uma tabela com cabeçalho mesclado
+kable(dados, format = "html", caption = "Tabela com Cabeçalho Mesclado") %>%
+  kable_styling() %>%
+  add_header_above(c(" " = 2, "Medidas" = 2))
+
+```
+
+```{r}
+# Salvar tabela como HTML
+library(htmltools)
+save_html(
+  kable(dados, format = "html", caption = "Tabela Salva como HTML") %>%
+    kable_styling(bootstrap_options = "striped"),
+  "tabela_exemplo.html"
+)
+
+```
+

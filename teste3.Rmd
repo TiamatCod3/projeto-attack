@@ -1,0 +1,45 @@
+---
+title: "Relatório de Estatísticas"
+output: html_document
+---
+
+```{r}
+library(knitr)
+library(kableExtra)
+
+```
+
+```{r}
+dt <- mtcars[1:5, 1:6]
+dt %>%
+  kbl(booktabs = T) 
+```
+
+
+
+```{r, echo = F}
+# Criar um data frame de exemplo
+dados <- data.frame(
+  Caracteristica = c("Idade", "Peso", "Altura"),
+  Valor = c(25, 70, 180)
+)
+
+# Gerar uma tabela básica com kable()
+kable(dados, caption = "Tabela Básica com kable()")
+
+```
+
+```{r}
+# Criar uma tabela com estilos usando kableExtra
+kable(dados, format = "html", caption = "Tabela Estilizada com kableExtra") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+
+```
+
+```{r}
+
+
+dt %>%
+  kbl(booktabs = TRUE, label = NA)
+```
+
