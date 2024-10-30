@@ -5,6 +5,8 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
+  word_document: default
 ---
 
 # Introdução
@@ -22,7 +24,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
 library(knitr)
 library(kableExtra)
-library(dplyr) 
+library(dplyr)
+
 
 Sys.getlocale("LC_CTYPE")
 Sys.setlocale("LC_CTYPE", "pt_BR.UTF-8")
@@ -32,9 +35,6 @@ attack2 <- read_excel("Dados/Dados_Adeanio_Attack_II_27052024.xlsx", sheet = "da
 ```
 
 ```{r rodar_test_t, echo=F}
-library(dplyr)
-library(knitr)
-library(kableExtra)
 
 # Função para executar o teste t e gerar a tabela
 rodar_teste_t <- function(dataset, var_resposta, var_grupo, nome_grupo) {
@@ -288,9 +288,9 @@ Não houve quantidade suficiente de observações sobre as barreiras relacionada
 # attack1$barreira.atencao = as.numeric(attack1$barreira.atencao)
 #colunas elegíveis, 527
 
-attack1$attack529
+# attack1$attack529
 
-colunas = c("attack527", "atack526")
+colunas = c("attack527")
 
 attack1 <- tratar_coluna_booleana(attack1, colunas)
 
