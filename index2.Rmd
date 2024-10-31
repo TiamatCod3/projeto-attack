@@ -1,0 +1,51 @@
+---
+title: "Relatório ATTACK"
+author: "Tiago Matos"
+date: "31/10/2024"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+library(knitr)
+library(kableExtra)
+library(dplyr)
+
+
+Sys.getlocale("LC_CTYPE")
+Sys.setlocale("LC_CTYPE", "pt_BR.UTF-8")
+
+
+attack2 <- read_excel("Dados/Dados_Adeanio_Attack_II_27052024.xlsx", sheet = "data")
+
+
+```
+
+```{r carregar-script, echo=F, include=T}
+# Carregar um script R externo que realiza a análise
+source("EstatisticaDescritiva_AttackI.R", echo = T, print.eval = F)
+```
+
+No presente estudo foram investigados 195,00 pacientes no ATTACK 1 e 373,00 pacientes no ATTACK 2. No ATTACK 1 a idade média de diagnóstico foi de 14,66 anos (+ 14,48) anos e, o responsável pelo diagnóstico não foi informado em 65,64% dos casos e em 25,64% dos casos ele foi feito por um médico. Em relação ao uso de medicação, 65,64% não informou se faz ou não uso de medicação regular e 27,18% alego fazer o uso regular de alguma medicação para o controle da asma, e, sobre o uso contínuos de medicação 68,79% dos pacientes pesquisados alegram fazer uso de alguma droga dessa forma. Ainda sobre a medicação, ela é preferencialmente adquirida por meio da farmácia privada (45,13%) e mais da metade (51,28%) dos indivíduos pesquisados declarou te alguma dificuldade para a aquisição desses medicamentos e 80,00% dos sujeitos fez uso de recursos próprios no último ano para adquiri-los. Em relação a assistência médica, o local procurado com a maior prioridade pelos pacientes quando apresentam crises de asma é a UPA e o a principal forma de utilização dos serviços de saúde é o SUS (95,38%) e meio de deslocamentos para esses locais é mais comumente o transporte público (42,26%). As informações detalhadas das categorias sócio-clínico-demográficas se encontram na tabela 1.
+Em relação ao ATTACK 2 (tabela 2), os pacientes apresentaram média de idade de 31,84 anos (+ 14,18) na sua maioria do sexo feminino (72,65%), solteiros (69,44%) e de cor autodeclarada preta (47,18%). Sobre a escolaridade a escolaridade mais frequente foi a ensino médio completo (39,68%). Em relação ao diagnóstico e manejo da asma, 82,34% dos pacientes informaram quem ela foi diagnosticada por médicos e 98,93% dos pacientes não informou se faz ou não usos contínuos de medicamentos, o mesmo percentual não declarou onde adquirem o medicamento, qual o meio de transporte utilizado para chegar aos serviços de saúde e se teve dificuldades para adquirir medicamentos. Em relação ao serviço de saúde buscado quando em crises de asma, apenas 1,10% declararam buscar a UPA.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
