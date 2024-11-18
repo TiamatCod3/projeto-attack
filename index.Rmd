@@ -504,7 +504,7 @@ rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.unic
 
 ```
 
-Em síntese, os testes t realizados compararam médias dos desfechos clínicos em função das barreiras reportadas. No Attack I,  houve significância estatística na relação entre barreiras de medicamentos e os desfechos clínicos. No Attack II, a única diferença significativa foi observada na relação entre dificuldades de transporte e visitas ambulatoriais, com um efeito pequeno (d de Cohen \< 0,20).
+Em síntese, os testes t realizados compararam médias dos desfechos clínicos em função das barreiras reportadas. No Attack I,  houve significância estatística na relação entre barreiras de medicamentos e os desfechos clínicos. No Attack II, a única diferença significativa foi observada na relação entre dificuldades de transporte e atenção básica. Em ambos estudos o fato de ter pelo menos uma bareira foi relevante.
 
 <br>
 
@@ -582,4 +582,4 @@ rodar_teste_t(dataset = attack, var_resposta = "soma.ataques", var_grupo = "barr
 
 ### Conclusão
 
-Para a análise de ambos os estudos em conjunto foi verificado que houve maior significância estatística entre as barreiras de transporte e acesso aos medicamentos. Destaca-se que o fato de ter pelo menos uma barreira de acesso também teve significância com relação ao número de ataques. Este achado demonstra uma possível adição de barreiras ao número de ataques de um modo geral.
+Para a análise de ambos os estudos em conjunto foi verificado que houve maior significância estatística entre as barreiras de transporte e acesso aos medicamentos. Destaca-se que o fato de ter pelo menos uma barreira de acesso também teve significância com relação ao número de ataques. Este achado demonstra uma possível relação de barreiras ao número de ataques de um modo geral.
