@@ -1,0 +1,16 @@
+*{
+  font-family: "Times New Roman, Sans-Serif";
+  font-size: 1.75rem;
+  text-align: justify;
+  line-height: 1.6;
+  text-indent: 1.5rem;
+}
+.two-columns {
+  column-count: 2;
+  column-gap: 20px; /* Espaço entre as colunas */
+  text-align: justify; /* Justifica o texto para melhor visualização */
+}
+
+h1, h2, h3, h4 {
+  font-weight: bold;
+}

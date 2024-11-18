@@ -1,21 +1,22 @@
 ---
-title: "Título do Relatório"
+title: "Análise Attack I e Attack II"
 author: "Tiago Matos"
 date: "`r Sys.Date()`"
 output:
   html_document:
     df_print: paged
-  pdf_document: default
+    css: Estilo/style.css
   word_document: default
+  pdf_document: default
 ---
 
-# Introdução
+<h2>Análise dos Dados</h2>
 
-Escrever sobre introdução
+As análises realizadas a partir dos instrumentos Attack I e Attack II visaram compreender as relações entre barreiras de acesso aos serviços de saúde e o desfecho clínico do número de ataques no período de estudo. O software utilizado foi o R Studio versão 2024.04.2 de livre distribuição.
 
-# Análise de Dados
+A primeira parte do trabalho consistiu em analisar o desfecho do número de ataques e sua relação com as barreiras de acesso que incluíram acesso a exames, medicamentos, atenção primária, internações e transporte. Os estudos Attack I e Attack II foram analisados separadamente. A análise inferencial foi feita, quando possível, para comparar a média entre os dois grupos analisados: com barreira <i>versus</i> sem barreira. O teste realizado foi o t de student e o nível de significância para o trabalho foi de p \< 0,05.
 
-Nesta seção, você pode carregar e analisar seus dados.
+Os dados omissos foram considerados como "não" para todas as perguntas "sim/não" sobre as barreiras de acesso. Caso algum destes campos fosse respondido como "sim" foi considerado com tendo barreira de acesso. Ao final de cada grupo de estudo Attack também foi inferido se havia alguma relação entre o número de ataques e os casos em que houve algum tipo de barreira de acesso. Em um segundo momento, foi feita uma junção dos dados dos estudos Attack I e Attack II e feitas novas estatísticas inferenciais, conforme mencionado acima.
 
 ```{r setup, include=FALSE}
 # Configurações iniciais
@@ -57,11 +58,12 @@ rodar_teste_t <- function(dataset, var_resposta, var_grupo, nome_grupo) {
         DP = sd(!!sym(var_resposta), na.rm = TRUE),
         t = resultado$statistic,
         GL = resultado$parameter,
-        p = resultado$p.value,
+        p = formatC(resultado$p.value, format = "e", digits = 2),
         Inferior = resultado$conf.int[1],
         Superior = resultado$conf.int[2]
       )
     
+    # print(resultado$p.value)
     # Renomeando e ajustando a variável do grupo
     estatisticas <- estatisticas %>%
       mutate(!!sym(var_grupo) := ifelse(!!sym(var_grupo) == TRUE, "Sim", "Não")) %>%
@@ -70,12 +72,21 @@ rodar_teste_t <- function(dataset, var_resposta, var_grupo, nome_grupo) {
     # 
     # cabecalho = c(" " = 1, nome_grupo = 8)
     # print(cabecalho)
-    
+    # estatisticas %>%
+    #   kable(format = "html") %>%
+    #   kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
+    #   add_header_above(setNames(c(1, 8), c(" ", nome_grupo))) %>%
+    #   collapse_rows(columns = 5:9, valign = "middle")
     # Gerando a tabela com kable, agora passando o valor de nome_grupo diretamente
+    # estatisticas %>%
+    #   kable(format = "html") %>%
+    #   kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
+    #   add_header_above(setNames(c(1, 8), c(" ", nome_grupo))) %>%
+    #   collapse_rows(columns = 5:9, valign = "middle")
     estatisticas %>%
-      kable(format = "html") %>%
-      kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
-      add_header_above(setNames(c(1, 8), c(" ", nome_grupo))) %>%
+      kbl(caption = nome_grupo, align = "c") %>%
+      kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed")) %>%
+      kable_classic(html_font = "Times New Roman") %>%
       collapse_rows(columns = 5:9, valign = "middle")
     
   } else {
@@ -84,7 +95,7 @@ rodar_teste_t <- function(dataset, var_resposta, var_grupo, nome_grupo) {
 }
 
 # Exemplo de uso da função
-# rodar_teste_t(dataset = attack2, var_resposta = "soma.ataques", var_grupo = "barreira.unica", nome_grupo = "Barreira de acesso a algum exame?")
+# rodar_teste_t(dataset = attack2, var_resposta = "soma.ataques", var_grupo = "barreira.unica", nome_grupo = "Barreira de acesso a exame?")
 
 ```
 
@@ -100,6 +111,9 @@ tratar_colunas <- function(dataset, colunas) {
     
     # Substitui valores iguais a 99 por 0
     dataset[[coluna]][dataset[[coluna]] == 99] <- 0
+    
+    # Substitui valores iguais a 999 por 0
+    dataset[[coluna]][dataset[[coluna]] == 999] <- 0
   }
   
   # Retorna o dataset tratado
@@ -165,38 +179,11 @@ operacao_pmin <- function(data) {
   do.call(pmin, c(data, na.rm = TRUE))  # Aplica pmax dinamicamente
 }
 
-# # Dataset de exemplo
-# df <- data.frame(
-#   campo1 = c(1, 2, 3),
-#   campo2 = c(4, 5, 6),
-#   campo3 = c(7, 8, 9)
-# )
-# 
-# # Usando a função para somar campo1 e campo2 e criar um novo campo 'soma_campo1_campo2'
-# df_novo <- tratar_colunas_com_operacao(
-#   dataset = df,
-#   colunas = c("campo1", "campo2"),
-#   operacao = operacao_soma,
-#   nome_novo_campo = "soma_campo1_campo2"
-# )
-# 
-# print(df_novo)
-# 
-# # Usando a função para multiplicar campo1, campo2 e campo3 e criar um novo campo 'multiplicacao_campo1_campo2_campo3'
-# df_novo <- tratar_colunas_com_operacao(
-#   dataset = df,
-#   colunas = c("campo1", "campo2", "campo3"),
-#   operacao = operacao_soma,
-#   nome_novo_campo = "multiplicacao_campo1_campo2_campo3"
-# )
-# 
-# print(df_novo)
-
 ```
 
+### Attack I
 
-## Attack1
-```{r head_attack1}
+```{r head_attack1, echo=F, include=FALSE}
 
 head(attack1)
 ```
@@ -204,11 +191,14 @@ head(attack1)
 ```{r soma_ataques, include=F}
 #colunas elegíveis 621, 211, v1 e v2
 colunas = c(
-  "attack621_v2", 
-  "attack211_v2", 
-  "attack621", 
-  "attack211"
+  "attack621_v2",
+  "attack211_v2"
   )
+# colunas = c(
+#   "attack621_v2",
+#   "attack211_v2"
+#   )
+
 attack1 <- tratar_colunas(attack1, colunas)
 
 
@@ -221,22 +211,20 @@ attack1 <- tratar_colunas_com_operacao(
 )
 ```
 
+#### Calculando a soma de ataques (Attack I)
 
-## Calculando a soma de ataques (Attack1)
+<p>Para calcular a relação entre a soma de ataques e as barreiras de acesso foi feita uma tratativa com os dados de ataque considerando os campos attack621 v2, "Número de ataques graves de asma no último ano" e attack211 v2, "Número de ataques graves de asma no último ano". Os resultados foram então somados em uma única variável de soma.</p>
 
-Para calcular a relação entre a soma de ataques e as barreiras de acesso foi feito uma tratativa com os dados de soma de ataque considerando os campos attack621_v2 e attack211_v2 para realizar a soma do total de ataques.Os dados faltantes foram considerados como 0 para fins de soma.
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=F}
 attack1$soma.ataques
 ```
 
+<br>
 
+#### Teste t entre as barreiras de exames e a soma de ataques (Attack I)
 
-## Teste t entre as barreiras de exames e a soma de ataques (Attack1)
+Para avaliar a relação entre as barreiras de exame e a soma de ataques foram considerados os campos attack533, "Se precisou de exames no serviço público, teve dificuldade na marcação dos exames?", e attack599, "Você gastou recursos próprios com exames para asma, no último ano?". Destaca-se que não houve significância estatística entre o número de ataques e as barreiras a exames.
 
-Para avaliar a relação entre as barreiras de exame e a soma de ataques foram considerados os campos attack533 e attack599 considerando a seguinte estrutura lógica:
-
-* Caso algum destes campos fosse respondido como sim foi considerado com tendo barreira para exames.
-Os resultados seguem abaixo:
 ```{r, echo=F}
 #colunas elegíveis, 533, 599
 colunas = c("attack533", "attack599")
@@ -244,17 +232,17 @@ colunas = c("attack533", "attack599")
 attack1 <- tratar_coluna_booleana(attack1, colunas)
 
 attack1 <- tratar_colunas_com_operacao(attack1, colunas, operacao_pmax,nome_novo_campo = "barreira.exame" )
-
+# 
 rodar_teste_t(attack1, var_resposta = "soma.ataques", var_grupo = "barreira.exame", nome_grupo = "Alguma barreira de exame?")
 
 ```
 
-Destaca-se que não houve significância estatística entre o número de ataques e as barreiras a exames
+<br>
 
-## Teste t entre as barreiras de transporte e a soma de ataques (Attack1)
-Para avaliar a relação entre as barreiras de transporte e a soma de ataques foi considerado o campo attack546. Os dados omissos foram considerados com não.
+#### Teste t entre as barreiras de transporte e a soma de ataques (Attack I)
 
-Os resultados seguem abaixo:
+Para avaliar a relação entre as barreiras de transporte e a soma de ataques foi considerado o campo attack546, "Você já deixou de procurar atendimento médico por falta de dinheiro para o transporte?". Destaca-se que não houve significância estatística entre o número de ataques e as barreiras a transporte.
+
 ```{r barreira_transporte_attack1, echo=F}
 
 # attack1$barreira.transporte = attack1$attack546
@@ -273,11 +261,12 @@ rodar_teste_t(attack1, var_resposta = "soma.ataques", var_grupo = "barreira.tran
 
 ```
 
-Destaca-se que não houve significância estatística entre o número de ataques e as barreiras a transporte
+<br>
 
-## Teste t entre as barreiras de atenção básica e a soma de ataques (Attack1)
+#### Teste t entre as barreiras de atenção básica e a soma de ataques (Attack I)
 
-Não houve quantidade suficiente de observações sobre as barreiras relacionadas à atenção básica que permitissem realizar uma análise estatítica.
+Para a análise das barreiras sobre a atenção básica foram extraídos dados dos campos attack527, "Você teve dificuldade de acesso à rede de atenção básica do SUS, nesta ocasião?" , attack594,"Qual a sua principal forma de utilização de serviços de saúde?", e attack596, "Você utiliza consultas particulares para o tratamento da asma?". Não houve significância estatística.
+
 ```{r, echo=F}
 #VERIFICANDO BARREIRAS RELACIONADAS A ATENÇÃO BÁSICA
 # attack1$barreira.atencao = attack1$attack527
@@ -289,19 +278,27 @@ Não houve quantidade suficiente de observações sobre as barreiras relacionada
 #colunas elegíveis, 527
 
 # attack1$attack529
+attack1$attack594[attack1$attack594 == "Consulta Particular"] = "Sim"
+attack1$attack594[attack1$attack594 == "Plano de saúde"] = "Sim"
+attack1$attack594[attack1$attack594 == "Plano de saúde"] = "Sim"
+attack1$attack594[attack1$attack594 == "SUS"] = "Não"
 
-colunas = c("attack527")
+
+colunas = c("attack527", "attack596", "attack594")
 
 attack1 <- tratar_coluna_booleana(attack1, colunas)
 
 attack1 <- tratar_colunas_com_operacao(attack1, colunas, operacao_pmax, nome_novo_campo = "barreira.atencao" )
 
-attack1$barreira.atencao
 
 rodar_teste_t(attack1, var_resposta = "soma.ataques", var_grupo = "barreira.atencao", nome_grupo = "Alguma barreira de atenção?")
 ```
 
-## Teste t entre as barreiras de medicamentos e a soma de ataques (Attack1)
+<br>
+
+#### Teste t entre as barreiras de medicamentos e a soma de ataques (Attack I
+
+Para avaliar a relação entre as barreiras de transporte e a soma de ataques foi considerado o campo attack601, "Você gastou recursos próprios com medicamentos para a asma, no último ano?". Destaca-se que não houve significância estatística entre o número de ataques e as barreiras aos medicamentos. Foi observado que houve significância estatística entre as médias dos dois grupos.
 
 ```{r, echo=F}
 #VERIFICANDO BARREIRAS RELACIONADAS A MEDICAMENTOS
@@ -317,7 +314,12 @@ rodar_teste_t(attack1, var_resposta = "soma.ataques", var_grupo = "barreira.medi
 
 ```
 
-## Teste t entre as barreiras de internação e a soma de ataques (Attack1)
+<br>
+
+#### Teste t entre as barreiras de internação e a soma de ataques (Attack I)
+
+Para avaliar a relação entre as barreiras de transporte e a soma de ataques foi considerado o campo attack929, "Você gastou recursos com internação em consequência da asma no último ano?". Não houve significância estatística na diferença entre as médias nesse caso.
+
 ```{r, echo=F}
 
 attack1$barreira.internacao = attack1$attack929
@@ -331,12 +333,15 @@ attack1$barreira.internacao[attack1$barreira.internacao == "NA"] = 0
 attack1$barreira.internacao[is.na(attack1$barreira.internacao)] = 0
 attack1$barreira.internacao = as.numeric(attack1$barreira.internacao)
 
-
-
 rodar_teste_t(attack1, var_resposta = "soma.ataques", var_grupo = "barreira.internacao", nome_grupo = "Alguma barreira de internação?")
 
 ```
-## Barreiras unicas (Attack I)
+
+<br>
+
+#### Barreiras únicas (Attack I)
+
+Como mencionando, foi feita análise entre os casos em que houve pelo menos uma barreira de acesso e o número de ataques. Observa-se que houve significância estatística entre ter pelo menos uma barreira de acesso e o número de ataques.
 
 ```{r, echo=F}
 #COMPARANDO OS CASOS EM QUE HOUVE PELO MENOS UMA BERREIRA DE ACESSO
@@ -350,66 +355,75 @@ rodar_teste_t(attack1, var_resposta = "soma.ataques", var_grupo = "barreira.unic
 
 ```
 
+<br>
 
-## Attack2
-```{r, echo=F}
+### Attack II
+
+```{r, echo=F, include = F}
 
 head(attack2)
 
 ```
 
-## Calculando a soma de ataques (Attack2)
+#### Calculando a soma de ataques (Attack II)
+
+Para calcular a relação entre a soma de ataques e as barreiras de acesso foi feito uma tratativa com os dados de ataque considerando os campos num_ataques, "Se sim, quantos ataques de asma desde a última visita/CT?" e num_crises, "Se sim, quantas crises de asma desde a última visita/CT?". Os resultados foram então somados em uma única variável de soma.
 
 ```{r, echo=F}
-#Contando o número de ataques
-# attack2$attack0173 <- as.numeric
-attack2$attack0173 <- as.numeric(attack2$attack0173)
-attack2$attack0173 <- ifelse(is.na(attack2$attack0173), 0, attack2$attack0173)
-attack2$attack0173[attack2$attack0173 == 999] = 0
-# attack2$attack0174
-# 
-# attack2$attack0174 <- as.numeric(attack2$attack0174)
-# attack2$attack0174 <- ifelse(is.na(attack2$attack0174), 0, attack2$attack0174)
-# attack2$attack0174[attack2$attack0174 == 999] = 0
-# 
-# attack2$attack0573 <- as.numeric(attack2$attack0573)
-# attack2$attack0573 <- ifelse(is.na(attack2$attack0573), 0, attack2$attack0573)
-# attack2$attack0573[attack2$attack0573 == 999] = 0
-# 
-# attack2$attack0176 <- as.numeric(attack2$attack0176)
-# attack2$attack0176 <- ifelse(is.na(attack2$attack0176), 0, attack2$attack0176)
-# attack2$attack0176[attack2$attack0176 == 999 | attack2$attack0176 == 99] = 0
 
-# attack2$attack0177 <- as.numeric(attack2$attack0177)
-# attack2$attack0177 <- ifelse(is.na(attack2$attack0177), 0, attack2$attack0177)
-# attack2$attack0177[attack2$attack0177 == 999] = 0
+# colunas = c(
+#   "attack1044",
+#   "attack0177",
+#   
+#   )
+colunas = c(
+  "num_ataques",
+  "num_crises"
+  )
 
-# attack2$soma.ataques <- attack2$attack0173 + attack2$attack0174 + attack2$attack0176  + attack2$attack0573
+attack2 <- tratar_colunas(attack2, colunas)
 
-# attack2$soma.ataques <- attack2$attack0173
-attack2$soma.ataques <- attack2$attack0173
 
-# attack2$maximo.ataques <- pmax(attack2$attack0173 , attack2$attack0174 , attack2$attack0176 , attack2$attack0177 , attack2$attack0573)
-# attack2$maximo.ataques
-
-attack2$soma.ataques
+campo_novo = "soma.ataques"
+attack2 <- tratar_colunas_com_operacao(
+  dataset = attack2,
+  colunas = colunas,
+  operacao = operacao_soma,
+  nome_novo_campo = campo_novo
+)
 ```
 
+<br>
 
-## Teste t entre as barreiras de atenção básica e a soma de ataques (Attack2)
+#### Teste t entre as barreiras de atenção básica e a soma de ataques (Attack2)
+
+Para avaliar a relação entre as barreiras da atenção básica e a soma de ataques foi considerado o campo attack0643_v3, "Você teve dificuldade de acesso à rede de atenção básica do SUS, nesta ocasião?", e o campo attack1067 com as respostas 1, 2, 3, 4 que foram computadas como "sim", "Se não você está em acompanhamento regular para tratamento da asma em algum serviço?, justifique", "Foi até a USF/UBS, mas não conseguiu agendar uma consulta", "Foi até o HEOM, mas não conseguiu agendar uma consulta", "Foi até uma policlínica/multicentro do SUS, mas não conseguiu agendar uma consulta ". Houve significância estatística para esse variável.
 
 ```{r, echo=F}
 #Barreira Atenção Básica
-attack2$attack0643_v3 <- lapply(attack2$attack0643_v3, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
-attack2$attack0643_v3 <- unlist(attack2$attack0643_v3)
-# unlist(attack2$attack0643_v3)
 
+colunas = c(
+  "attack0643_v3",
+  "attack1067___1",
+  "attack1067___2",
+  "attack1067___3",
+  "attack1067___4"
+  )
 
-attack2$barreira.atencao = attack2$attack0643_v3
-rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.atencao", nome_grupo = "Alguma barreira de atenção primária?")
+attack2 <- tratar_coluna_booleana(attack2, colunas)
+
+attack2 <- tratar_colunas_com_operacao(attack2, colunas, operacao_pmax, nome_novo_campo = "barreira.atencao" )
+
+# attack1$barreira.atencao
+
+rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.atencao", nome_grupo = "Alguma barreira de atenção?")
 ```
 
-## Teste t entre as barreiras de medicamentos e a soma de ataques (Attack2)
+<br>
+
+#### Teste t entre as barreiras de medicamentos e a soma de ataques (Attack2)
+
+Para avaliar a relação entre as barreiras de medicamentos e a soma de ataques foi considerado o campo attack0681 e attack0681_v2, "Você teve alguma dificuldade em adquirir este medicamento?". Não houve significância estatística na diferença entre as médias nesse caso.
 
 ```{r echo=F}
 #Barreira Medicamento
@@ -430,7 +444,12 @@ rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.medi
 
 ```
 
-## Teste t entre as barreiras de transporte e a soma de ataques (Attack2)
+<br>
+
+#### Teste t entre as barreiras de transporte e a soma de ataques (Attack2)
+
+Para avaliar a relação entre as barreiras de transportes e a soma de ataques foi considerado o campo attack0662, "Você já deixou de procurar atendimento médico por falta de dinheiro para o transporte?". Houve significância estatística para esta variável.
+
 ```{r, echo=F}
 #Barreira Transporte
 # attack2$attack0662
@@ -446,7 +465,11 @@ rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.tran
 
 ```
 
-## Teste t entre as barreiras de exames e a soma de ataques (Attack2)
+<br>
+
+#### Teste t entre as barreiras de exames e a soma de ataques (Attack2)
+
+Para avaliar a relação entre as barreiras de transporte e a soma de ataques foi considerado o campo attack0649_v2, "Se precisou de exames no serviço público, teve dificuldade na marcação dos exames?". Não houve significância estatítica na diferença entre as médias nesse caso.
 
 ```{r, echo=F}
 #Barreira Exame
@@ -454,8 +477,11 @@ rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.tran
 attack2$attack0649 <- lapply(attack2$attack0649, function(x) ifelse(is.na(x), 0, ifelse(x == "Sim", 1, 0)))
 attack2$attack0649 <- unlist(attack2$attack0649)
 attack2$attack0649[attack2$exames_sim == "Não"] = 1
+attack2$attack0649[attack2$exames_sim == "0"] = 1
 attack2$attack0649[attack2$exames_sim_v2 == "Não"] = 1
+attack2$attack0649[attack2$exames_sim == "0"] = 1
 # attack2$attack0649
+
 
 attack2$barreira.exame <- attack2$attack0649
 # attack2$barreira.exame
@@ -464,7 +490,9 @@ rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.exam
 
 ```
 
-## Testando barreiras únicas (Attack 2)
+#### Barreiras únicas (Attack 2)
+
+Como mencionando, foi feita análise entre os casos em que houve pelo menos uma barreira de acesso e o número de ataques. Houve significância estatística neste caso. Ou seja, existe uma relaçao entre pelo menos uma barreira de acesso e o número de ataques.
 
 ```{r, echo=F}
 #Barreira Única
@@ -476,11 +504,15 @@ rodar_teste_t(attack2, var_resposta = "soma.ataques", var_grupo = "barreira.unic
 
 ```
 
+Em síntese, os testes t realizados compararam médias dos desfechos clínicos em função das barreiras reportadas. No Attack I,  houve significância estatística na relação entre barreiras de medicamentos e os desfechos clínicos. No Attack II, a única diferença significativa foi observada na relação entre dificuldades de transporte e visitas ambulatoriais, com um efeito pequeno (d de Cohen \< 0,20).
 
-# Attack I + Attack 2
+<br>
 
+## Attack I e Attack II
 
-```{r, echo=F}
+Por fim, foi feita uma junção das instâncias entre os resultados do Attack I e II com os resultados demosntrados como a seguir.
+
+```{r, echo=F, include=F}
 attack = attack1 %>% select(soma.ataques, barreira.atencao, barreira.exame, barreira.internacao, barreira.transporte, barreira.medicamento, barreira.unica)
 
 attack2_to_bind = attack2 %>% select(soma.ataques, barreira.atencao, barreira.exame, barreira.transporte, barreira.medicamento, barreira.unica)
@@ -493,32 +525,61 @@ attack$barreira.exame = as.numeric(attack$barreira.exame)
 attack
 ```
 
-
-
-
-## Attack I e Attack II
 ```{r, echo=F}
-rodar_teste_t(dataset = attack, var_resposta = "soma.ataques", var_grupo = "barreira.exame", nome_grupo = "Barreira de acesso a algum exame?")
+boxplot(attack1$soma.ataques, attack2$soma.ataques, names = c("Attack I", "Attack II"), main = "Comparativo do número de ataques entre os estudos Attack I e Attack II", ylab = "Número de ataques")
 ```
 
+Ao realizar o test t para comparar as médias dos dois grupos observou-se que a hipótese nula é rejeitada e as médias são iguais estatisticamente.  
+
+<br>
+
+```{r, echo=F}
+# Dados dos dois grupos
+media1 <- mean(attack1$soma.ataques)       # Média do Grupo 1
+media2 <- mean(attack2$soma.ataques)    # Média do Grupo 2
+sd1 <- sd(attack1$soma.ataques)            # Desvio padrão do Grupo 1
+sd2 <- sd(attack2$soma.ataques)         # Desvio padrão do Grupo 2
+n1 <- length(attack1$soma.ataques)            # Tamanho amostral do Grupo 1
+n2 <- length(attack2$soma.ataques)           # Tamanho amostral do Grupo 2
+
+# Cálculo do valor t
+t_value <- (media1 - media2) / sqrt((sd1^2 / n1) + (sd2^2 / n2))
+
+# Cálculo dos graus de liberdade ajustados (Welch)
+df <- ((sd1^2 / n1) + (sd2^2 / n2))^2 /
+      (((sd1^2 / n1)^2) / (n1 - 1) + ((sd2^2 / n2)^2) / (n2 - 1))
+
+# Cálculo do p-valor (bicaudal)
+p_value <- 2 * pt(-abs(t_value), df)
+
+# Resultados
+cat("t =", round(t_value, 4), "\n")
+cat("Graus de liberdade =", round(df, 2), "\n")
+cat("p-valor =", formatC(p_value, format = "e", digits = 2), "\n")
+```
+Os resultados dos testes são apresentados abaixo:
+
+```{r, echo=F}
+rodar_teste_t(dataset = attack, var_resposta = "soma.ataques", var_grupo = "barreira.exame", nome_grupo = "Barreira de acesso a exame?")
+```
 
 ```{r, echo=F}
 rodar_teste_t(dataset = attack, var_resposta = "soma.ataques", var_grupo = "barreira.transporte", nome_grupo = "Barreira de acesso a transporte?")
 ```
 
-
 ```{r, echo=F}
 rodar_teste_t(dataset = attack, var_resposta = "soma.ataques", var_grupo = "barreira.medicamento", nome_grupo = "Barreira de acesso a medicamento?")
 ```
 
-
 ```{r, echo=F}
 rodar_teste_t(dataset = attack, var_resposta = "soma.ataques", var_grupo = "barreira.atencao", nome_grupo = "Barreira de acesso a atenção básica?")
 ```
-
 
 ```{r, echo=F}
 rodar_teste_t(dataset = attack, var_resposta = "soma.ataques", var_grupo = "barreira.unica", nome_grupo = "Teve alguma barreira de acesso?")
 
 ```
 
+### Conclusão
+
+Para a análise de ambos os estudos em conjunto foi verificado que houve maior significância estatística entre as barreiras de transporte e acesso aos medicamentos. Destaca-se que o fato de ter pelo menos uma barreira de acesso também teve significância com relação ao número de ataques. Este achado demonstra uma possível adição de barreiras ao número de ataques de um modo geral.
